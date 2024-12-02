@@ -1,10 +1,5 @@
-
-
-
-
 import streamlit as st
 from datetime import datetime
-
 
 from shapely.geometry import Point, Polygon
 import geopandas as gpd
@@ -13,6 +8,8 @@ import geopy
 
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
+
+import requests
 
 '''
 # Taxifare calculator
@@ -79,10 +76,6 @@ st.map(map_data)
 ## Cash only!
 '''
 
-
-
-import requests
-
 url = 'https://taxifare.lewagon.ai/predict'
 params= dict(pickup_datetime=date_heure,
                  pickup_longitude=lon,
@@ -99,9 +92,3 @@ to_pay=round(r.json()["fare"],2)
 
 # st.write(r.status_code)
 st.write("it will cost you:",to_pay, "$")
-
-'''
-*******
-
-
-'''
