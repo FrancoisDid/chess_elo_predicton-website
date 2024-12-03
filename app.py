@@ -1,5 +1,13 @@
 import streamlit as st
 import requests
+import chess
+import chess.svg
+from io import StringIO
+from PIL import Image
+import cairosvg
+from io import BytesIO
+import base64
+
 
 # URL du logo
 logo_url = "pngtree-black-and-white-chess-board-chess-pieces-png-image_2901949.jpg"  # Exemple de logo
@@ -143,3 +151,86 @@ st.markdown('''
 - **PGN Format**: Ensure the PGN is valid before submission.
 - **Predictions**: The ELOs displayed represent the model’s best estimation based on the game data.
 ''')
+
+# Initialize the chess board in session state
+if 'board' not in st.session_state:
+    st.session_state.board = chess.Board()
+
+# Function to render the board in SVG format
+def render_svg(board):
+    """Render chessboard as SVG."""
+    svg = chess.svg.board(board)
+    b64 = base64.b64encode(svg.encode('utf-8')).decode("utf-8")
+    html = r'<img src="data:image/svg+xml;base64,%s"/>' % b64
+    st.write(html, unsafe_allow_html=True)
+
+# Function to update the board with a move
+def update_board(move):
+    """Update the chessboard with the move provided."""
+    try:
+        st.session_state.board.push_san(move)  # SAN notation move
+        st.success(f"Move {move} executed successfully!")
+    except ValueError:
+        st.error("Invalid move. Please try again.")
+
+# Render the current board state
+render_svg(st.session_state.board)
+
+# Input for the user to make a move (in SAN)
+move_input = st.text_input("Enter your move (e.g., e2e4, Nf3):")
+
+# Handle the move and update the board
+if move_input:
+    update_board(move_input)
+    render_svg(st.session_state.board)
+
+# Add a reset button to start a new game
+if st.button("Reset Game"):
+    st.session_state.board = chess.Board()  # Reset to initial position
+    render_svg(st.session_state.board)
+    st.success("Game reset!")
+
+#-------------------
+
+# # Function to display the moves one by one
+# def display_moves(pgn_input):
+#     """Parse the PGN input and display moves one by one."""
+#     try:
+#         # Read the PGN
+#         game = chess.pgn.read_game(pgn_input)
+#         if game is None:
+#             st.error("Invalid PGN format")
+#             return
+
+#         # Get all the moves from the game
+#         moves = [move for move in game.mainline_moves()]
+#         total_moves = len(moves)
+
+#         # Display the moves with a button to go to the next move
+#         if 'current_move_index' not in st.session_state:
+#             st.session_state.current_move_index = 0
+
+#         move = moves[st.session_state.current_move_index]
+
+#         # Display the move on the board
+#         update_board(move)
+
+#         # Show the move number and the move itself
+#         st.markdown(f"**Move {st.session_state.current_move_index + 1}:** {move}")
+
+#         # Provide a button to go to the next move
+#         if st.session_state.current_move_index < total_moves - 1:
+#             if st.button("Next Move"):
+#                 st.session_state.current_move_index += 1
+#                 render_svg(st.session_state.board)
+#         else:
+#             st.button("End of Game")  # No more moves to show
+#     except Exception as e:
+#         st.error(f"Error processing PGN: {e}")
+
+# # Input for the user to provide the PGN
+# pgn_input = st.text_area("Paste your PGN here:", height=150)
+
+# # When the user clicks "Start Game"
+# if st.button("Start Game") and pgn_input.strip():
+#     display_moves(pgn_input)
