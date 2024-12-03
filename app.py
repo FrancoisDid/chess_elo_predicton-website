@@ -76,7 +76,8 @@ st.map(map_data)
 ## Cash only!
 '''
 
-url = 'https://taxifare.lewagon.ai/predict'
+url = 'https://chess-elo-prediction-556540502853.europe-west1.run.app'
+
 params= dict(pickup_datetime=date_heure,
                  pickup_longitude=lon,
                  pickup_latitude=lat,
