@@ -1,9 +1,10 @@
 import streamlit as st
 import requests
 
-# URL du logo
-logo_url = "pngtree-black-and-white-chess-board-chess-pieces-png-image_2901949.jpg"  # Exemple de logo
-# Ajouter un style CSS amélioré
+# Chemin du logo (image téléchargée)
+logo_path = "pngtree-black-and-white-chess-board-chess-pieces-png-image_2901949.jpg"
+
+# CSS pour améliorer le style de la page et centrer le logo
 st.markdown(
     """
     <style>
@@ -21,6 +22,12 @@ st.markdown(
         padding: 30px;
         margin: 30px auto;
         max-width: 800px;
+    }
+    .centered-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
     }
     .title {
         font-size: 2.5rem;
@@ -45,6 +52,7 @@ st.markdown(
         font-size: 1.3rem;
         font-weight: bold;
         margin: 10px 0;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     }
     textarea {
         background-color: #40444b; /* Gris sidéral pour le champ de texte */
@@ -60,7 +68,7 @@ st.markdown(
         justify-content: center;
         margin-top: 20px;
     }
-    button {
+    .btn-predict {
         background-color: #4caf50; /* Vert chess.com */
         color: white;
         border: none;
@@ -71,15 +79,16 @@ st.markdown(
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-    button:hover {
+    .btn-predict:hover {
         background-color: #45a049;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
-# Ajouter le logo
-st.image(logo_url, width=150)
+
+# Ajouter le logo centré
+st.image(logo_path, width=150)
 
 # Titre principal
 st.markdown('<div class="title">Chess ELO Predictor</div>', unsafe_allow_html=True)
@@ -87,17 +96,12 @@ st.markdown('<div class="title">Chess ELO Predictor</div>', unsafe_allow_html=Tr
 # Sous-titre
 st.markdown('<div class="subtitle">Paste your PGN to discover the skill levels of both players!</div>', unsafe_allow_html=True)
 
-'''
-## Add Your Chess Game PGN
-'''
-
 # Champ de saisie pour PGN
+st.markdown('## Add Your Chess Game PGN')
 pgn_input = st.text_area('Paste your PGN of the chess game below:', height=150)
 
-'''
-## Retrieve Prediction
-'''
-
+# Section de prédiction
+st.markdown('## Retrieve Prediction')
 st.markdown('''
 Once we have the PGN, let's call our API to retrieve predictions for both players.
 ''')
@@ -136,10 +140,9 @@ if st.button('Predict ELO'):
     else:
         st.warning('Please paste a valid PGN before predicting.')
 
-'''
-## Notes
-'''
+# Notes
 st.markdown('''
+## Notes
 - **PGN Format**: Ensure the PGN is valid before submission.
 - **Predictions**: The ELOs displayed represent the model’s best estimation based on the game data.
 ''')
