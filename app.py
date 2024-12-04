@@ -8,58 +8,11 @@ import cairosvg
 import requests
 from io import StringIO
 
-st.set_page_config(layout="wide")
-
-st.markdown("""
-<style>
-    .stApp {
-        background-color: #1a1a1a;
-    }
-
-    .title-container {
-        text-align: center;
-        padding: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .title {
-        color: white;
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-        color: #b4b4b4;
-        font-size: 1.2rem;
-    }
-
-    .stButton > button {
-        background-color: #7fa650 !important;
-        color: white !important;
-        font-size: 24px !important;
-        padding: 20px 40px !important;
-        width: 100% !important;
-    }
-</style>
-
-<div class="title-container">
-    <div class="title">Chess ELO Predictor</div>
-    <div class="subtitle">Analyze your game and predict player ratings</div>
-</div>
-""", unsafe_allow_html=True)
-
-# URL de l'API
-url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
-
-
-
-# URL de l'API
-url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
-
-if 'pgn_headers' not in st.session_state: # ---> for username
+# Initialize all session states
+if 'page' not in st.session_state:
+    st.session_state.page = 'main'
+if 'pgn_headers' not in st.session_state:
     st.session_state.pgn_headers = {}
-
 if 'board' not in st.session_state:
     st.session_state.board = chess.Board()
 if 'moves' not in st.session_state:
@@ -69,97 +22,259 @@ if 'current_move_index' not in st.session_state:
 if 'game_loaded' not in st.session_state:
     st.session_state.game_loaded = False
 
-_, center_col, _ = st.columns([1, 2, 1])
-with center_col:
-    pgn_input = st.text_area("""""", height=100, placeholder="Paste your PGN here...")
-    params= dict(X=pgn_input)
-    r = requests.get(url, params=params)
+st.set_page_config(layout="wide")
 
-    if st.button("Analyze Game", use_container_width=True):
-        if pgn_input.strip():
-            try:
-                pgn = io.StringIO(pgn_input)
-                game = chess.pgn.read_game(pgn)
-                if game:
-                    st.session_state.pgn_headers = dict(game.headers)  # Add this line ---> for username
-                    st.session_state.moves = list(game.mainline_moves())
-                    st.session_state.board = game.board()
-                    st.session_state.current_move_index = 0
-                    st.session_state.game_loaded = True
+# Common CSS
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #1a1a1a;
+    }
+    .title-container {
+        text-align: center;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    .title {
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .subtitle {
+        color: #b4b4b4;
+        font-size: 1.2rem;
+    }
+    .stButton > button {
+        background-color: #7fa650 !important;
+        color: white !important;
+        font-size: 24px !important;
+        padding: 20px 40px !important;
+        width: 100% !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-                    svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True, colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
-                    png_data = cairosvg.svg2png(bytestring=svg_board)
-                    st.session_state.board_image = Image.open(io.BytesIO(png_data))
+def main_page():
+    st.markdown("""
+    <div class="title-container">
+        <div class="title">Chess ELO Predictor</div>
+        <div class="subtitle">Analyze your game and predict player ratings</div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    _, center_col, _ = st.columns([1, 2, 1])
+    with center_col:
+        pgn_input = st.text_area("""""", height=100, placeholder="Paste your PGN here...")
 
-                    st.session_state.white_elo =r.json()["white"]
-                    st.session_state.black_elo =r.json()["black"]
-            except Exception as e:
-                st.error(f"Error: {str(e)}")
+        if st.button("Analyze Game", use_container_width=True):
+            if pgn_input.strip():
+                try:
+                    # Store PGN in session state
+                    st.session_state.pgn_input = pgn_input
+                    st.session_state.game_loaded = False  # Reset game loaded state
+                    # Switch to analysis page
+                    st.session_state.page = 'analysis'
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
 
+def analysis_page():
+    st.markdown("""
+    <div class="title-container">
+        <div class="title">Game Analysis</div>
+    </div>
+    """, unsafe_allow_html=True)
 
-if st.session_state.game_loaded:
-    col1, col2 = st.columns([2, 1])  # Tighter ratio
+    # Add New Analysis button at the top
+    if st.button("New Analysis", key="new_analysis"):
+        st.session_state.game_loaded = False
+        st.session_state.page = 'main'
+        st.rerun()
 
-    with col1:
-        if hasattr(st.session_state, 'board_image'):
-            st.image(st.session_state.board_image, width=900)
+    # Only load the game once when entering the analysis page
+    if not st.session_state.game_loaded:
+        url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
+        params = dict(X=st.session_state.pgn_input)
+        r = requests.get(url, params=params)
 
-            btn_col1, btn_col2 = st.columns(2)
-            with btn_col1:
-                if st.button("← Previous"):
-                    if st.session_state.current_move_index > 0:
-                        st.session_state.current_move_index -= 1
-                        st.session_state.board.pop()
-                        svg_board = chess.svg.board(st.session_state.board, size=1000, coordinates=True, colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
+        try:
+            pgn = io.StringIO(st.session_state.pgn_input)
+            game = chess.pgn.read_game(pgn)
+            if game:
+                st.session_state.pgn_headers = dict(game.headers)
+                st.session_state.moves = list(game.mainline_moves())
+                st.session_state.board = game.board()
+                st.session_state.current_move_index = 0
+
+                svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True,
+                                          colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
+                png_data = cairosvg.svg2png(bytestring=svg_board)
+                st.session_state.board_image = Image.open(io.BytesIO(png_data))
+
+                st.session_state.white_elo = r.json()["white"]
+                st.session_state.black_elo = r.json()["black"]
+
+                st.session_state.game_loaded = True
+
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
+            st.session_state.page = 'main'
+            st.rerun()
+
+    # Display the analysis if game is loaded
+    if st.session_state.game_loaded:
+        col1, col2 = st.columns([2, 1])
+
+        with col1:
+            if hasattr(st.session_state, 'board_image'):
+                st.image(st.session_state.board_image, width=900)
+
+                # Custom CSS for the smaller buttons
+                st.markdown("""
+                <style>
+                .main .block-container {
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                    margin-top: 0 !important;
+                }
+
+                /* Remove extra padding from header */
+                header {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
+
+                /* Minimize button container spacing */
+                .stButton {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                /* Custom button styles with minimal spacing */
+                .small-button > button {
+                    background-color: #1a1a1a !important;
+                    color: white !important;
+                    font-size: 24px !important;
+                    padding: 20px 20px !important;
+                    width: 100% !important;
+                    border: 1px solid #404040 !important;
+                    border-radius: 8px !important;
+                    margin: 0 !important;
+                }
+
+                .big-button > button {
+                    background-color: #7fa650 !important;
+                    color: white !important;
+                    font-size: 24px !important;
+                    padding: 20px 40px !important;
+                    width: 150% !important;
+                    margin: 0 !important;
+                }
+
+                /* Remove any gap at the top of the app */
+                .stApp {
+                    margin-top: 0 !important;
+                }
+
+                /* Minimize padding in the main content area */
+                .element-container {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+                </style>
+                """, unsafe_allow_html=True)
+                # Create 4 columns for all buttons
+                btn_col1, btn_col2, btn_col3, btn_col4 = st.columns([1, 4, 4, 1])
+
+                with btn_col1:
+                    if st.button("⟲ Start", key="start", help="Go to start of game"):
+                        st.session_state.current_move_index = 0
+                        st.session_state.board = chess.Board()
+                        svg_board = chess.svg.board(st.session_state.board, size=1000, coordinates=True,
+                                                colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                         png_data = cairosvg.svg2png(bytestring=svg_board)
                         st.session_state.board_image = Image.open(io.BytesIO(png_data))
                         st.rerun()
 
-            with btn_col2:
-                if st.button("Next →"):
-                    if st.session_state.current_move_index < len(st.session_state.moves):
-                        move = st.session_state.moves[st.session_state.current_move_index]
-                        st.session_state.board.push(move)
-                        st.session_state.current_move_index += 1
-                        svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True, colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
+                with btn_col2:
+                    if st.button("← Previous", use_container_width=True):
+                        if st.session_state.current_move_index > 0:
+                            st.session_state.current_move_index -= 1
+                            st.session_state.board.pop()
+                            svg_board = chess.svg.board(st.session_state.board, size=1000, coordinates=True,
+                                                    colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
+                            png_data = cairosvg.svg2png(bytestring=svg_board)
+                            st.session_state.board_image = Image.open(io.BytesIO(png_data))
+                            st.rerun()
+
+                with btn_col3:
+                    if st.button("Next →", use_container_width=True):
+                        if st.session_state.current_move_index < len(st.session_state.moves):
+                            move = st.session_state.moves[st.session_state.current_move_index]
+                            st.session_state.board.push(move)
+                            st.session_state.current_move_index += 1
+                            svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True,
+                                                    colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
+                            png_data = cairosvg.svg2png(bytestring=svg_board)
+                            st.session_state.board_image = Image.open(io.BytesIO(png_data))
+                            st.rerun()
+
+                with btn_col4:
+                    if st.button("End ⟳", key="end", help="Go to end of game"):
+                        while st.session_state.current_move_index < len(st.session_state.moves):
+                            move = st.session_state.moves[st.session_state.current_move_index]
+                            st.session_state.board.push(move)
+                            st.session_state.current_move_index += 1
+                        svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True,
+                                                colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                         png_data = cairosvg.svg2png(bytestring=svg_board)
                         st.session_state.board_image = Image.open(io.BytesIO(png_data))
                         st.rerun()
 
+        with col2:
+            st.markdown(f"""
+            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 8px; border: 1px solid #404040;">
+                <h3>♚ Black Player</h3>
+                <div style="font-size: 32px; font-weight: bold; color: #ffd700;">{st.session_state.black_elo}</div>
+                <div style="font-size: 24px; color: #888888; margin-top: 10px;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
+            </div>
+            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 8px; border: 1px solid #404040; margin-bottom: 20px;">
+                <h3>♔ White Player</h3>
+                <div style="font-size: 32px; font-weight: bold; color: #ffd700;">{st.session_state.white_elo}</div>
+                <div style="font-size: 24px; color: #888888; margin-top: 10px;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    with col2:
-        st.markdown(f"""
-        <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 8px; border: 1px solid #404040; margin-bottom: 20px;">
-            <h3>♔ White Player</h3>
-            <div style="font-size: 32px; font-weight: bold; color: #ffd700;">{st.session_state.white_elo}</div>
-            <div style="font-size: 24px; color: #888888; margin-top: 10px;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
-        </div>
-        <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 8px; border: 1px solid #404040;">
-            <h3>♚ Black Player</h3>
-            <div style="font-size: 32px; font-weight: bold; color: #ffd700;">{st.session_state.black_elo}</div>
-            <div style="font-size: 24px; color: #888888; margin-top: 10px;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
-        </div>
-        """, unsafe_allow_html=True)
+            moves_text = ""
+            temp_board = chess.Board()
+            for i, move in enumerate(st.session_state.moves):
+                move_number = (i // 2) + 1
+                if i % 2 == 0:
+                    current_move = f"{move_number}. {temp_board.san(move)}"
+                else:
+                    current_move = f" {temp_board.san(move)} "
+                temp_board.push(move)
 
-        moves_text = ""
-        temp_board = chess.Board()
-        for i, move in enumerate(st.session_state.moves):
-            move_number = (i // 2) + 1
-            if i % 2 == 0:
-                current_move = f"{move_number}. {temp_board.san(move)}"
-            else:
-                current_move = f" {temp_board.san(move)} "
-            temp_board.push(move)
+                if i == st.session_state.current_move_index - 2 :
+                    moves_text += f'<span style="background-color: #ffd700;">{current_move}</span>'
+                else:
+                    moves_text += current_move
 
-            if i == st.session_state.current_move_index - 1:
-                moves_text += f'<span style="background-color: #ffd700;">{current_move}</span>'
-            else:
-                moves_text += current_move
+            st.markdown(f"""
+            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 16px; margin-top: 30px; font-family: monospace; font-size: 20px; color: white; width: 130%;">
+                <h3 style="color: #ffd700; margin-bottom: 15px;">Game Moves</h3>
+                {moves_text}
+            </div>
+            """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 16px; margin-top: 15px; font-family: monospace; font-size: 20px; color: white; width: 130%; text-align: center;">
+                {st.session_state.pgn_headers.get('Termination', '')}
+            </div>
+            """, unsafe_allow_html=True)
 
-        st.markdown(f"""
-        <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 16px; margin-top: 115px; font-family: monospace; font-size: 20px; color: white; width: 130%;">
-            <h3 style="color: #ffd700; margin-bottom: 15px;">Game Moves</h3>
-            {moves_text}
-        </div>
-        """, unsafe_allow_html=True)
+# Page routing
+if st.session_state.page == 'main':
+    main_page()
+elif st.session_state.page == 'analysis':
+    analysis_page()
