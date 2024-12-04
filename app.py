@@ -49,7 +49,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
 # URL de l'API
 url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
 
@@ -57,7 +56,6 @@ url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
 
 # URL de l'API
 url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
-
 
 if 'pgn_headers' not in st.session_state: # ---> for username
     st.session_state.pgn_headers = {}
@@ -76,7 +74,6 @@ with center_col:
     pgn_input = st.text_area("""""", height=100, placeholder="Paste your PGN here...")
     params= dict(X=pgn_input)
     r = requests.get(url, params=params)
-
 
     if st.button("Analyze Game", use_container_width=True):
         if pgn_input.strip():
