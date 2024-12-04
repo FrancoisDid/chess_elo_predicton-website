@@ -5,6 +5,7 @@ import chess.svg
 import io
 from PIL import Image
 import cairosvg
+import requests
 from io import StringIO
 
 st.set_page_config(layout="wide")
@@ -48,6 +49,16 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+
+# URL de l'API
+url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
+
+
+
+# URL de l'API
+url = 'https://chess-elo-556540502853.europe-west1.run.app/predict'
+
+
 if 'pgn_headers' not in st.session_state: # ---> for username
     st.session_state.pgn_headers = {}
 
@@ -62,7 +73,11 @@ if 'game_loaded' not in st.session_state:
 
 _, center_col, _ = st.columns([1, 2, 1])
 with center_col:
-    pgn_input = st.text_area("", height=100, placeholder="Paste your PGN here...")
+    pgn_input = st.text_area("""""", height=100, placeholder="Paste your PGN here...")
+    params= dict(X=pgn_input)
+    r = requests.get(url, params=params)
+
+
     if st.button("Analyze Game", use_container_width=True):
         if pgn_input.strip():
             try:
@@ -79,9 +94,9 @@ with center_col:
                     png_data = cairosvg.svg2png(bytestring=svg_board)
                     st.session_state.board_image = Image.open(io.BytesIO(png_data))
 
-                    import random
-                    st.session_state.white_elo = random.randint(800, 2200)
-                    st.session_state.black_elo = random.randint(800, 2200)
+
+                    st.session_state.white_elo =r.json()["white"]
+                    st.session_state.black_elo =r.json()["black"]
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
