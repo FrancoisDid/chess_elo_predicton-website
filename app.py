@@ -191,11 +191,9 @@ def analysis_page():
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                st.markdown("""
-                <div style="transform: translateX(1000px);">
-                """, unsafe_allow_html=True)
-                st.image(st.session_state.board_image, width=550)
-                st.markdown("</div>", unsafe_allow_html=True)
+                _, img_col, _ = st.columns([1.2, 3, 1])  # This creates space around the board
+                with img_col:
+                    st.image(st.session_state.board_image, width=550)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
