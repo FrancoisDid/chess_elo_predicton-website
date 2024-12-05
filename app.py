@@ -156,11 +156,11 @@ def analysis_page():
 
     # Display the analysis if game is loaded
     if st.session_state.game_loaded:
-        col1, col2 = st.columns([3, 1])
+        col1, col2 = st.columns([3, 2])
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                st.image(st.session_state.board_image,use_column_width=True)
+                st.image(st.session_state.board_image,width=300)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
@@ -219,11 +219,12 @@ def analysis_page():
                 # Create 4 columns for all buttons
                 btn_col1, btn_col2, btn_col3, btn_col4 = st.columns([1, 2, 2, 1])
 
+
                 with btn_col1:
-                    if st.button("⟲ Start", key="start", help="Go to start of game"):
+                    if st.button("⟲", key="start", help="Go to start of game", use_container_width=True):
                         st.session_state.current_move_index = 0
                         st.session_state.board = chess.Board()
-                        svg_board = chess.svg.board(st.session_state.board, size=1000, coordinates=True,
+                        svg_board = chess.svg.board(st.session_state.board, size=300, coordinates=True,
                                                 colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                         png_data = cairosvg.svg2png(bytestring=svg_board)
                         st.session_state.board_image = Image.open(io.BytesIO(png_data))
@@ -234,7 +235,7 @@ def analysis_page():
                         if st.session_state.current_move_index > 0:
                             st.session_state.current_move_index -= 1
                             st.session_state.board.pop()
-                            svg_board = chess.svg.board(st.session_state.board, size=1000, coordinates=True,
+                            svg_board = chess.svg.board(st.session_state.board, size=300, coordinates=True,
                                                     colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                             png_data = cairosvg.svg2png(bytestring=svg_board)
                             st.session_state.board_image = Image.open(io.BytesIO(png_data))
@@ -246,24 +247,23 @@ def analysis_page():
                             move = st.session_state.moves[st.session_state.current_move_index]
                             st.session_state.board.push(move)
                             st.session_state.current_move_index += 1
-                            svg_board = chess.svg.board(st.session_state.board, size=500, coordinates=True,
+                            svg_board = chess.svg.board(st.session_state.board, size=300, coordinates=True,
                                                     colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                             png_data = cairosvg.svg2png(bytestring=svg_board)
                             st.session_state.board_image = Image.open(io.BytesIO(png_data))
                             st.rerun()
 
                 with btn_col4:
-                    if st.button("End ⟳", key="end", help="Go to end of game"):
+                    if st.button("⟳", key="end", help="Go to end of game", use_container_width=True):
                         while st.session_state.current_move_index < len(st.session_state.moves):
                             move = st.session_state.moves[st.session_state.current_move_index]
                             st.session_state.board.push(move)
                             st.session_state.current_move_index += 1
-                        svg_board = chess.svg.board(st.session_state.board, size=500, coordinates=True,
+                        svg_board = chess.svg.board(st.session_state.board, size=300, coordinates=True,
                                                 colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                         png_data = cairosvg.svg2png(bytestring=svg_board)
                         st.session_state.board_image = Image.open(io.BytesIO(png_data))
                         st.rerun()
-
 
         with col2:
             # Player cards with improved layout
