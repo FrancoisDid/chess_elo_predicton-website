@@ -191,11 +191,15 @@ def analysis_page():
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                st.image(st.session_state.board_image,width=550)
+                st.markdown("""
+                <div style="display: flex; justify-content: center; align-items: center;">
+                """, unsafe_allow_html=True)
+                st.image(st.session_state.board_image, width=550)
+                st.markdown("</div>", unsafe_allow_html=True)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
-                <style>
+                 <style>
                 .main .block-container {
                     padding-top: 0 !important;
                     padding-bottom: 0 !important;
@@ -212,6 +216,14 @@ def analysis_page():
                 .stButton {
                     margin: 0 !important;
                     padding: 0 !important;
+                }
+
+                /* Center the entire button row */
+                .row-widget.stHorizontal {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 10px;
                 }
 
                 /* Custom button styles with minimal spacing */
