@@ -311,17 +311,17 @@ def analysis_page():
             st.markdown(f"""
             <div class="player-card" style="padding: 0.15rem; margin-bottom: 0.15rem; line-height: 1;">
                 <div style="display: flex; align-items: center;">
-                    <h3 style="color: white; margin: 0; font-size: 0.9rem;">♚ Black Player</h3>
+                    <h3 style="color: white; margin: 0; font-size: 0.9rem; margin-bottom: 2px;">♚ Black Player</h3>
                 </div>
-                <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: 0; line-height: 1.2;">{st.session_state.black_elo}</div>
-                <div style="font-size: 0.8rem; color: #888888; margin: 0; line-height: 1.2;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: -2px 0 -2px 0;">{st.session_state.black_elo}</div>
+                <div style="font-size: 0.8rem; color: #888888; margin: -2px 0 0 0;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
             </div>
             <div class="player-card" style="padding: 0.15rem; margin-bottom: 0.15rem; line-height: 1;">
                 <div style="display: flex; align-items: center;">
-                    <h3 style="color: white; margin: 0; font-size: 0.9rem;">♔ White Player</h3>
+                    <h3 style="color: white; margin: 0; font-size: 0.9rem; margin-bottom: 2px;">♔ White Player</h3>
                 </div>
-                <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: 0; line-height: 1.2;">{st.session_state.white_elo}</div>
-                <div style="font-size: 0.8rem; color: #888888; margin: 0; line-height: 1.2;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: -2px 0 -2px 0;">{st.session_state.white_elo}</div>
+                <div style="font-size: 0.8rem; color: #888888; margin: -2px 0 0 0;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
             </div>
             """, unsafe_allow_html=True)
 
