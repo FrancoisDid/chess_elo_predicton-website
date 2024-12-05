@@ -309,15 +309,15 @@ def analysis_page():
         with col2:
             # Player cards with improved layout
             st.markdown(f"""
-            <div class="player-card">
-                <h3 style="color: white; margin-bottom: 0.5rem;">♚ Black Player</h3>
-                <div style="font-size: 1.5rem; font-weight: bold; color: #ffd700;">{st.session_state.black_elo}</div>
-                <div style="font-size: 1rem; color: #888888; margin-top: 0.5rem;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
+            <div class="player-card" style="padding: 0.5rem; margin-bottom: 0.5rem;">
+                <h3 style="color: white; margin-bottom: 0.25rem; font-size: 1rem;">♚ Black Player</h3>
+                <div style="font-size: 1.2rem; font-weight: bold; color: #ffd700;">{st.session_state.black_elo}</div>
+                <div style="font-size: 0.9rem; color: #888888; margin-top: 0.25rem;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
             </div>
-            <div class="player-card">
-                <h3 style="color: white; margin-bottom: 0.5rem;">♔ White Player</h3>
-                <div style="font-size: 1.5rem; font-weight: bold; color: #ffd700;">{st.session_state.white_elo}</div>
-                <div style="font-size: 1rem; color: #888888; margin-top: 0.5rem;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
+            <div class="player-card" style="padding: 0.5rem; margin-bottom: 0.5rem;">
+                <h3 style="color: white; margin-bottom: 0.25rem; font-size: 1rem;">♔ White Player</h3>
+                <div style="font-size: 1.2rem; font-weight: bold; color: #ffd700;">{st.session_state.white_elo}</div>
+                <div style="font-size: 0.9rem; color: #888888; margin-top: 0.25rem;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
             </div>
             """, unsafe_allow_html=True)
 
