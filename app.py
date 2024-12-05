@@ -193,7 +193,7 @@ def analysis_page():
             if hasattr(st.session_state, 'board_image'):
                 _, img_col, _ = st.columns([1.2, 3, 1])  # This creates space around the board
                 with img_col:
-                    st.image(st.session_state.board_image, width=550)
+                    st.image(st.session_state.board_image, width=700)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
