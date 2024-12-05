@@ -309,16 +309,19 @@ def analysis_page():
         with col2:
             # Player cards with improved layout
             st.markdown(f"""
-            <div class="player-card" style="padding: 0.25rem; margin-bottom: 0.25rem;">
-                <h3 style="color: white; margin: 0; font-size: 1rem;">♚ Black Player</h3>
-                <div style="font-size: 1.2rem; font-weight: bold; color: #ffd700; margin: 0;">{st.session_state.black_elo}</div>
-                <div style="font-size: 0.9rem; color: #888888; margin: 0;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
+            <div class="player-card" style="padding: 0.15rem; margin-bottom: 0.15rem; line-height: 1;">
+                <div style="display: flex; align-items: center;">
+                    <h3 style="color: white; margin: 0; font-size: 0.9rem;">♚ Black Player</h3>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: 0; line-height: 1.2;">{st.session_state.black_elo}</div>
+                <div style="font-size: 0.8rem; color: #888888; margin: 0; line-height: 1.2;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
             </div>
-            <div class="player-card" style="padding: 0.25rem; margin-bottom: 0.25rem;">
-                <h3 style="color: white; margin: 0; font-size: 1rem;">♔ White Player</h3>
-                <div style="font-size: 1.2rem; font-weight: bold; color: #ffd700; margin: 0;">{st.session_state.white_elo}</div>
-                <div style="font-size: 0.9rem; color: #888888; margin: 0;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
-            </div>
+            <div class="player-card" style="padding: 0.15rem; margin-bottom: 0.15rem; line-height: 1;">
+                <div style="display: flex; align-items: center;">
+                    <h3 style="color: white; margin: 0; font-size: 0.9rem;">♔ White Player</h3>
+                </div>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: 0; line-height: 1.2;">{st.session_state.white_elo}</div>
+                <div style="font-size: 0.8rem; color: #8
             """, unsafe_allow_html=True)
 
             # Moves display with improved formatting
