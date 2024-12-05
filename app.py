@@ -192,7 +192,7 @@ def analysis_page():
         with col1:
             if hasattr(st.session_state, 'board_image'):
                 st.markdown("""
-                <div style="margin-left: 1000px;">
+                <div style="width: 800px; margin: 0 auto; padding-left: 120px;">
                 """, unsafe_allow_html=True)
                 st.image(st.session_state.board_image, width=550)
                 st.markdown("</div>", unsafe_allow_html=True)
