@@ -160,7 +160,7 @@ def analysis_page():
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                st.image(st.session_state.board_image,width=700)
+                st.image(st.session_state.board_image,width=550)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
