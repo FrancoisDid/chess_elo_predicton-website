@@ -160,7 +160,7 @@ def analysis_page():
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                st.image(st.session_state.board_image,width=500)
+                st.image(st.session_state.board_image,width=700)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
@@ -221,7 +221,7 @@ def analysis_page():
 
 
                 with btn_col1:
-                    if st.button("⟲", key="start", help="Go to start of game", use_container_width=True):
+                    if st.button("⟲ start", key="start", help="Go to start of game", use_container_width=True):
                         st.session_state.current_move_index = 0
                         st.session_state.board = chess.Board()
                         svg_board = chess.svg.board(st.session_state.board, size=300, coordinates=True,
@@ -254,7 +254,7 @@ def analysis_page():
                             st.rerun()
 
                 with btn_col4:
-                    if st.button("⟳", key="end", help="Go to end of game", use_container_width=True):
+                    if st.button("End ⟳", key="end", help="Go to end of game", use_container_width=True):
                         while st.session_state.current_move_index < len(st.session_state.moves):
                             move = st.session_state.moves[st.session_state.current_move_index]
                             st.session_state.board.push(move)
