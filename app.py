@@ -321,7 +321,8 @@ def analysis_page():
                     <h3 style="color: white; margin: 0; font-size: 0.9rem;">♔ White Player</h3>
                 </div>
                 <div style="font-size: 1.1rem; font-weight: bold; color: #ffd700; margin: 0; line-height: 1.2;">{st.session_state.white_elo}</div>
-                <div style="font-size: 0.8rem; color: #8
+                <div style="font-size: 0.8rem; color: #888888; margin: 0; line-height: 1.2;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
+            </div>
             """, unsafe_allow_html=True)
 
             # Moves display with improved formatting
