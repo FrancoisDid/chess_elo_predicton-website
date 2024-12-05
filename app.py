@@ -32,60 +32,90 @@ st.markdown("""
     }
     .title-container {
         text-align: center;
-        padding: 1rem;
-        margin-bottom: 1rem;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
     }
     .title {
         color: white;
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: bold;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.15rem;
     }
     .subtitle {
         color: #b4b4b4;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     .stButton > button {
         background-color: #7fa650 !important;
         color: white !important;
-        font-size: 1.2rem !important;
-        padding: 0.75rem 1.5rem !important;
+        font-size: 1rem !important;
+        padding: 0.5rem 1rem !important;
         width: 100% !important;
     }
     .main .block-container {
-        max-width: 1400px;
-        padding-top: 1rem !important;
-        padding-bottom: 1rem !important;
+        max-width: 1200px;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
     }
     .navigation-button > button {
         background-color: #1a1a1a !important;
         color: white !important;
-        font-size: 1rem !important;
-        padding: 0.5rem !important;
+        font-size: 0.9rem !important;
+        padding: 0.3rem !important;
         border: 1px solid #404040 !important;
         border-radius: 4px !important;
         margin: 0 !important;
     }
     .player-card {
         background-color: #262421;
-        padding: 1rem;
-        border-radius: 8px;
+        padding: 0.75rem;
+        border-radius: 6px;
         border: 1px solid #404040;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    .player-card h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    .player-card div {
+        font-size: 1.2rem !important;
+        margin-top: 0.25rem !important;
     }
     .moves-container {
         background-color: #262421;
-        padding: 1rem;
-        border-radius: 8px;
+        padding: 0.75rem;
+        border-radius: 6px;
         font-family: monospace;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         color: white;
         overflow-wrap: break-word;
         word-wrap: break-word;
         word-break: break-word;
+        margin-bottom: 0.5rem;
+    }
+    .moves-container h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .small-button > button {
+        background-color: #1a1a1a !important;
+        color: white !important;
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+        width: 100% !important;
+        border: 1px solid #404040 !important;
+        border-radius: 6px !important;
+        margin: 0 !important;
+    }
+    .main .element-container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    header {
+        padding: 0 !important;
+        margin: 0 !important;
     }
 </style>
-""", unsafe_allow_html=True)
 
 def main_page():
     st.markdown("""
