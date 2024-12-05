@@ -191,7 +191,7 @@ def analysis_page():
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                _, img_col, _ = st.columns([1.2, 3, 1])  # This creates space around the board
+                _, img_col, _ = st.columns([1, 3, 1])  # This creates space around the board
                 with img_col:
                     st.image(st.session_state.board_image, width=1000)
 
