@@ -116,6 +116,7 @@ st.markdown("""
         margin: 0 !important;
     }
 </style>
+""", unsafe_allow_html=True)
 
 def main_page():
     st.markdown("""
