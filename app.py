@@ -32,25 +32,57 @@ st.markdown("""
     }
     .title-container {
         text-align: center;
-        padding: 2rem;
-        margin-bottom: 2rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
     }
     .title {
         color: white;
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: bold;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
     }
     .subtitle {
         color: #b4b4b4;
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     .stButton > button {
         background-color: #7fa650 !important;
         color: white !important;
-        font-size: 24px !important;
-        padding: 20px 40px !important;
+        font-size: 1.2rem !important;
+        padding: 0.75rem 1.5rem !important;
         width: 100% !important;
+    }
+    .main .block-container {
+        max-width: 1400px;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+    .navigation-button > button {
+        background-color: #1a1a1a !important;
+        color: white !important;
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+        border: 1px solid #404040 !important;
+        border-radius: 4px !important;
+        margin: 0 !important;
+    }
+    .player-card {
+        background-color: #262421;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #404040;
+        margin-bottom: 1rem;
+    }
+    .moves-container {
+        background-color: #262421;
+        padding: 1rem;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        color: white;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -107,7 +139,7 @@ def analysis_page():
                 st.session_state.board = game.board()
                 st.session_state.current_move_index = 0
 
-                svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True,
+                svg_board = chess.svg.board(st.session_state.board, size=400, coordinates=True,
                                           colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                 png_data = cairosvg.svg2png(bytestring=svg_board)
                 st.session_state.board_image = Image.open(io.BytesIO(png_data))
@@ -124,11 +156,11 @@ def analysis_page():
 
     # Display the analysis if game is loaded
     if st.session_state.game_loaded:
-        col1, col2 = st.columns([2, 1])
+        col1, col2 = st.columns([3, 1])
 
         with col1:
             if hasattr(st.session_state, 'board_image'):
-                st.image(st.session_state.board_image, width=900)
+                st.image(st.session_state.board_image,se_column_width=True)
 
                 # Custom CSS for the smaller buttons
                 st.markdown("""
@@ -185,7 +217,7 @@ def analysis_page():
                 </style>
                 """, unsafe_allow_html=True)
                 # Create 4 columns for all buttons
-                btn_col1, btn_col2, btn_col3, btn_col4 = st.columns([1, 4, 4, 1])
+                btn_col1, btn_col2, btn_col3, btn_col4 = st.columns([1, 2, 2, 1])
 
                 with btn_col1:
                     if st.button("⟲ Start", key="start", help="Go to start of game"):
@@ -214,7 +246,7 @@ def analysis_page():
                             move = st.session_state.moves[st.session_state.current_move_index]
                             st.session_state.board.push(move)
                             st.session_state.current_move_index += 1
-                            svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True,
+                            svg_board = chess.svg.board(st.session_state.board, size=500, coordinates=True,
                                                     colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                             png_data = cairosvg.svg2png(bytestring=svg_board)
                             st.session_state.board_image = Image.open(io.BytesIO(png_data))
@@ -226,26 +258,29 @@ def analysis_page():
                             move = st.session_state.moves[st.session_state.current_move_index]
                             st.session_state.board.push(move)
                             st.session_state.current_move_index += 1
-                        svg_board = chess.svg.board(st.session_state.board, size=600, coordinates=True,
+                        svg_board = chess.svg.board(st.session_state.board, size=500, coordinates=True,
                                                 colors={'square light': '#f0d9b5', 'square dark': '#b58863'})
                         png_data = cairosvg.svg2png(bytestring=svg_board)
                         st.session_state.board_image = Image.open(io.BytesIO(png_data))
                         st.rerun()
 
+
         with col2:
+            # Player cards with improved layout
             st.markdown(f"""
-            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 8px; border: 1px solid #404040;">
-                <h3>♚ Black Player</h3>
-                <div style="font-size: 32px; font-weight: bold; color: #ffd700;">{st.session_state.black_elo}</div>
-                <div style="font-size: 24px; color: #888888; margin-top: 10px;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
+            <div class="player-card">
+                <h3 style="color: white; margin-bottom: 0.5rem;">♚ Black Player</h3>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #ffd700;">{st.session_state.black_elo}</div>
+                <div style="font-size: 1rem; color: #888888; margin-top: 0.5rem;">{st.session_state.pgn_headers.get('Black', 'Unknown')}</div>
             </div>
-            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 8px; border: 1px solid #404040; margin-bottom: 20px;">
-                <h3>♔ White Player</h3>
-                <div style="font-size: 32px; font-weight: bold; color: #ffd700;">{st.session_state.white_elo}</div>
-                <div style="font-size: 24px; color: #888888; margin-top: 10px;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
+            <div class="player-card">
+                <h3 style="color: white; margin-bottom: 0.5rem;">♔ White Player</h3>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #ffd700;">{st.session_state.white_elo}</div>
+                <div style="font-size: 1rem; color: #888888; margin-top: 0.5rem;">{st.session_state.pgn_headers.get('White', 'Unknown')}</div>
             </div>
             """, unsafe_allow_html=True)
 
+            # Moves display with improved formatting
             moves_text = ""
             temp_board = chess.Board()
             for i, move in enumerate(st.session_state.moves):
@@ -256,19 +291,17 @@ def analysis_page():
                     current_move = f" {temp_board.san(move)} "
                 temp_board.push(move)
 
-                if i == st.session_state.current_move_index - 2 :
+                if i == st.session_state.current_move_index - 2:
                     moves_text += f'<span style="background-color: #ffd700;">{current_move}</span>'
                 else:
                     moves_text += current_move
 
             st.markdown(f"""
-            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 16px; margin-top: 30px; font-family: monospace; font-size: 20px; color: white; width: 130%;">
-                <h3 style="color: #ffd700; margin-bottom: 15px;">Game Moves</h3>
-                {moves_text}
+            <div class="moves-container">
+                <h3 style="color: #ffd700; margin-bottom: 0.75rem;">Game Moves</h3>
+                <div style="line-height: 1.5;">{moves_text}</div>
             </div>
-            """, unsafe_allow_html=True)
-            st.markdown(f"""
-            <div style="margin-left: -180px; background-color: #262421; padding: 20px; border-radius: 16px; margin-top: 15px; font-family: monospace; font-size: 20px; color: white; width: 130%; text-align: center;">
+            <div class="moves-container" style="margin-top: 0.75rem; text-align: center;">
                 {st.session_state.pgn_headers.get('Termination', '')}
             </div>
             """, unsafe_allow_html=True)
