@@ -291,7 +291,7 @@ def analysis_page():
                     current_move = f" {temp_board.san(move)} "
                 temp_board.push(move)
 
-                if i == st.session_state.current_move_index - 2:
+                if i == st.session_state.current_move_index - 1:
                     moves_text += f'<span style="background-color: #ffd700;">{current_move}</span>'
                 else:
                     moves_text += current_move
